@@ -1,0 +1,1192 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DJ Neri Saculles — Virtual Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple: #886CDA;
+    --purple-light: #A995E4;
+    --interactive-border: #007AFF;
+    --text-light: #F1F1F3;
+    --text-muted: #ACACB9;
+    --text-deep: #75758A;
+    --black: #000000;
+    --white: #FFFFFF;
+    --surface: #0E0E11;
+    --surface-hover: #1A1A1F;
+    --bg: #00000A;
+    --glow-outer: rgba(136,108,218,0.5);
+    --glow-inset: rgb(109,75,210);
+    --font-display: 'Unbounded', 'Courier New', monospace;
+    --font-body: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text-light);
+    font-family:var(--font-body);
+    font-weight:400;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+
+  :focus-visible{
+    outline:2px solid var(--purple);
+    outline-offset:2px;
+  }
+
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 40px;
+  }
+
+  @media (max-width:1023px){ .wrap{ padding:0 32px; } }
+  @media (max-width:767px){ .wrap{ padding:0 16px; } }
+
+  /* ---------- Ambient background glow ---------- */
+  .glow-field{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    background:
+      radial-gradient(ellipse 900px 600px at 15% -5%, rgba(136,108,218,0.14), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 90% 20%, rgba(136,108,218,0.10), transparent 60%),
+      radial-gradient(ellipse 800px 600px at 50% 95%, rgba(136,108,218,0.10), transparent 60%);
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    backdrop-filter:blur(10px);
+    background:rgba(0,0,10,0.55);
+    border-bottom:1px solid rgba(136,108,218,0.12);
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:88px;
+  }
+  .logo{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:16px;
+    letter-spacing:0.5px;
+  }
+  .logo span{ color:var(--purple); }
+
+  .nav-links{
+    display:flex;
+    gap:0;
+    list-style:none;
+  }
+  .nav-links a{
+    display:inline-block;
+    padding:16px 20px;
+    font-size:16px;
+    font-weight:400;
+    color:var(--text-muted);
+    border-bottom:2px solid transparent;
+    transition:color 220ms ease, border-color 220ms ease;
+  }
+  .nav-links a:hover{ color:var(--text-light); border-bottom-color:var(--purple); }
+
+  .nav-cta{
+    display:inline-flex;
+    align-items:center;
+    height:44px;
+    padding:0 24px;
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:14px;
+    color:var(--text-light);
+    background:var(--bg);
+    border:2px solid var(--purple);
+    border-radius:64px;
+    transition:box-shadow 220ms ease, border-color 220ms ease;
+  }
+  .nav-cta:hover{
+    border-color:var(--purple-light);
+    box-shadow:0 0 16px rgba(136,108,218,0.3);
+  }
+
+  .nav-toggle{
+    display:none;
+    width:40px; height:40px;
+    align-items:center; justify-content:center;
+    background:var(--bg);
+    border:2px solid var(--purple);
+    border-radius:8px;
+    color:var(--text-light);
+    font-size:20px;
+  }
+
+  @media (max-width:1023px){
+    .nav-links, .nav-cta{ display:none; }
+    .nav-toggle{ display:flex; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    z-index:1;
+    padding:80px 0 88px;
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:40px;
+    align-items:center;
+    min-height:88vh;
+  }
+  @media (max-width:1023px){
+    .hero{ grid-template-columns:1fr; min-height:auto; padding:64px 0 64px; }
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:rgba(136,108,218,0.15);
+    color:var(--purple);
+    font-family:var(--font-display);
+    font-size:12px;
+    font-weight:500;
+    padding:6px 12px;
+    border-radius:16px;
+    border:1px solid var(--purple);
+    margin-bottom:24px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--purple);
+    box-shadow:0 0 8px var(--purple);
+  }
+
+  h1.display{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:48px;
+    line-height:1.2;
+    color:var(--text-light);
+  }
+  h1.display em{
+    font-style:normal;
+    color:var(--purple);
+  }
+
+  @media (max-width:767px){ h1.display{ font-size:32px; } }
+
+  .hero p.lead{
+    margin-top:24px;
+    font-size:18px;
+    color:var(--text-muted);
+    max-width:46ch;
+    line-height:1.6;
+  }
+
+  .hero-cta-row{
+    margin-top:40px;
+    display:flex;
+    gap:24px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  .btn-primary{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    height:58px;
+    padding:16px 32px;
+    background:var(--bg);
+    color:var(--text-light);
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:16px;
+    line-height:1;
+    border:3px solid var(--purple);
+    border-radius:64px;
+    box-shadow:var(--glow-outer) 0px 8px 32px 0px, var(--glow-inset) 8px -8px 30px 0px inset;
+    transition:box-shadow 220ms ease;
+  }
+  .btn-primary:hover{
+    box-shadow:rgba(136,108,218,0.6) 0px 8px 40px 0px, rgb(120,90,200) 8px -8px 30px 0px inset;
+  }
+  .btn-primary:active{
+    box-shadow:rgba(136,108,218,0.5) 0px 8px 16px 0px, rgb(100,70,190) 8px -8px 30px 0px inset;
+  }
+
+  .btn-text{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:14px;
+    color:var(--text-light);
+    transition:color 220ms ease;
+    position:relative;
+  }
+  .btn-text:hover{ color:var(--purple); }
+
+  .hero-media{
+    position:relative;
+    border-radius:32px;
+    overflow:hidden;
+    aspect-ratio:4/5;
+    background:
+      linear-gradient(160deg, rgba(136,108,218,0.35), rgba(0,0,10,0.9) 65%),
+      linear-gradient(135deg,#141018,#0a0812 60%,#000);
+    border:1px solid rgba(136,108,218,0.25);
+  }
+  .hero-media::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(136,108,218,0.35), transparent 45%),
+      radial-gradient(circle at 75% 75%, rgba(0,122,255,0.15), transparent 40%);
+    mix-blend-mode:screen;
+    pointer-events:none;
+  }
+  .hero-media.has-video::after{ display:none; }
+  .hero-media iframe{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border:0;
+  }
+  .hero-media .play{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:72px; height:72px;
+    border-radius:50%;
+    background:rgba(14,14,17,0.7);
+    border:2px solid var(--purple);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 32px rgba(136,108,218,0.5);
+  }
+  .hero-media .play::before{
+    content:"";
+    border-style:solid;
+    border-width:10px 0 10px 16px;
+    border-color:transparent transparent transparent var(--text-light);
+    margin-left:4px;
+  }
+  .hero-media .frame-label{
+    position:absolute;
+    bottom:20px; left:20px;
+    font-family:var(--font-display);
+    font-size:12px;
+    color:var(--text-muted);
+    background:rgba(0,0,10,0.6);
+    padding:6px 12px;
+    border-radius:16px;
+    border:1px solid rgba(136,108,218,0.4);
+  }
+
+  /* ---------- Section shared ---------- */
+  section{ position:relative; z-index:1; padding:88px 0; }
+  @media (max-width:1023px){ section{ padding:64px 0; } }
+  @media (max-width:767px){ section{ padding:48px 0; } }
+
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:24px;
+    margin-bottom:48px;
+    flex-wrap:wrap;
+  }
+  h2.heading{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:36px;
+    line-height:1.2;
+    color:var(--text-light);
+  }
+  @media (max-width:767px){ h2.heading{ font-size:26px; } }
+
+  .section-desc{
+    color:var(--text-muted);
+    font-size:16px;
+    max-width:42ch;
+  }
+
+  /* ---------- About ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns:0.8fr 1.2fr;
+    gap:64px;
+    align-items:start;
+  }
+  @media (max-width:1023px){ .about-grid{ grid-template-columns:1fr; gap:32px; } }
+
+  .about-portrait{
+    position:relative;
+    border-radius:32px;
+    aspect-ratio:3/4;
+    background:linear-gradient(160deg,#171220,#0a0812 70%);
+    border:1px solid rgba(136,108,218,0.25);
+    overflow:hidden;
+  }
+  .about-portrait::after{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(circle at 50% 20%, rgba(136,108,218,0.4), transparent 55%);
+    mix-blend-mode:screen;
+  }
+
+  .about-body p.lg{
+    font-size:24px;
+    font-weight:400;
+    color:var(--text-light);
+    line-height:1.5;
+    margin-bottom:24px;
+  }
+  .about-body p.lg .accent{ color:var(--purple); }
+  .about-body p{ color:var(--text-muted); font-size:16px; margin-bottom:16px; }
+
+  .stat-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+    margin-top:40px;
+  }
+  @media (max-width:600px){ .stat-row{ grid-template-columns:1fr 1fr; } }
+  .stat{
+    background:var(--surface);
+    border-radius:16px;
+    padding:20px;
+  }
+  .stat .num{
+    font-family:var(--font-display);
+    font-size:28px;
+    font-weight:600;
+    color:var(--purple);
+  }
+  .stat .label{
+    font-size:12px;
+    color:var(--text-muted);
+    margin-top:4px;
+  }
+
+  /* ---------- Work / Projects ---------- */
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  @media (max-width:1023px){ .card-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:767px){ .card-grid{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--surface);
+    border-radius:32px;
+    padding:32px;
+    transition:background 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+  }
+  .card:hover{
+    background:var(--surface-hover);
+    transform:scale(1.02);
+    box-shadow:rgba(136,108,218,0.2) 0px 4px 16px 0px;
+  }
+
+  .card-thumb{
+    border-radius:16px;
+    aspect-ratio:9/16;
+    max-width:280px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom:24px;
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(150deg,#161320,#0a0812 70%);
+  }
+  .card-thumb::after{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(circle at 30% 30%, rgba(136,108,218,0.4), transparent 55%);
+    mix-blend-mode:screen;
+    pointer-events:none;
+  }
+  .card-thumb.has-video::after{ display:none; }
+  .card-thumb iframe{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border:0;
+  }
+  .card-thumb .tag{
+    position:absolute;
+    top:16px; left:16px;
+    font-family:var(--font-display);
+    font-size:11px;
+    font-weight:500;
+    color:var(--purple);
+    background:rgba(136,108,218,0.15);
+    border:1px solid var(--purple);
+    padding:6px 12px;
+    border-radius:16px;
+  }
+  .card-thumb .mini-play{
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:44px; height:44px;
+    border-radius:50%;
+    border:2px solid var(--purple);
+    background:rgba(14,14,17,0.6);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .card-thumb .mini-play::before{
+    content:"";
+    border-style:solid;
+    border-width:7px 0 7px 11px;
+    border-color:transparent transparent transparent var(--text-light);
+    margin-left:2px;
+  }
+
+  .card h3{
+    font-family:var(--font-display);
+    font-size:20px;
+    font-weight:600;
+    margin-bottom:12px;
+  }
+  .card p{
+    color:var(--text-muted);
+    font-size:15px;
+    flex-grow:1;
+    margin-bottom:20px;
+  }
+  .card-link{
+    font-family:var(--font-display);
+    font-size:13px;
+    font-weight:600;
+    color:var(--purple);
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+  .card:hover .card-link{ color:var(--purple-light); }
+
+  /* ---------- Selected Work: portrait hover reels ---------- */
+  .reels-grid{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+
+  .reel-item{
+    position:relative;
+    width:260px;
+    flex:0 1 260px;
+  }
+
+  .reel-video-wrap{
+    position:relative;
+    aspect-ratio:9/16;
+    border-radius:24px;
+    overflow:hidden;
+    background:linear-gradient(150deg,#161320,#0a0812 70%);
+    border:1px solid rgba(136,108,218,0.2);
+    transform:scale(1);
+    transform-origin:center center;
+    transition:transform 500ms cubic-bezier(0.22,1,0.36,1), opacity 500ms ease, box-shadow 500ms ease;
+    will-change:transform;
+  }
+  .reel-video-wrap iframe{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border:0;
+  }
+  .reel-video-wrap .tag{
+    position:absolute;
+    top:16px; left:16px;
+    z-index:2;
+    font-family:var(--font-display);
+    font-size:11px;
+    font-weight:500;
+    color:var(--purple);
+    background:rgba(0,0,10,0.55);
+    border:1px solid var(--purple);
+    padding:6px 12px;
+    border-radius:16px;
+    pointer-events:none;
+  }
+
+  .reel-info{
+    margin-top:16px;
+    padding:0 4px;
+    opacity:0;
+    transform:translateY(14px);
+    transition:opacity 400ms ease 60ms, transform 400ms ease 60ms;
+    pointer-events:none;
+  }
+  .reel-info h3{
+    font-family:var(--font-display);
+    font-size:16px;
+    font-weight:600;
+    margin-bottom:8px;
+    color:var(--text-light);
+  }
+  .reel-info p{
+    color:var(--text-muted);
+    font-size:13px;
+    line-height:1.5;
+    margin-bottom:10px;
+  }
+
+  /* hovered reel: zoom in + glow, info reveals */
+  .reel-item.is-active .reel-video-wrap{
+    transform:scale(1.06);
+    box-shadow:rgba(136,108,218,0.4) 0px 12px 32px 0px;
+    border-color:var(--purple-light);
+  }
+  .reel-item.is-active .reel-info{
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+  }
+
+  /* non-hovered siblings: scale down + dim while grid is being hovered */
+  .reels-grid.is-hovering .reel-item:not(.is-active) .reel-video-wrap{
+    transform:scale(0.92);
+    opacity:0.55;
+  }
+
+  /* touch devices: skip the zoom choreography, keep info always visible */
+  @media (hover:none), (pointer:coarse){
+    .reel-info{
+      opacity:1;
+      transform:none;
+      pointer-events:auto;
+    }
+    .reel-video-wrap{ transform:none !important; opacity:1 !important; }
+  }
+
+  @media (max-width:1023px){
+    .reel-item{ width:220px; flex:0 1 220px; }
+  }
+  @media (max-width:600px){
+    .reels-grid{ flex-direction:column; align-items:center; }
+    .reel-item{ width:100%; max-width:280px; flex:none; }
+  }
+
+  /* ---------- Graphic design samples ---------- */
+  .design-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px;
+  }
+  @media (max-width:767px){ .design-grid{ grid-template-columns:1fr; } }
+
+  .design-card{
+    background:var(--surface);
+    border-radius:24px;
+    overflow:hidden;
+    border:1px solid rgba(136,108,218,0.2);
+    transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  }
+  .design-card:hover{
+    transform:scale(1.015);
+    box-shadow:rgba(136,108,218,0.2) 0px 4px 20px 0px;
+    border-color:var(--purple-light);
+  }
+  .design-card .design-thumb{
+    width:100%;
+    aspect-ratio:4/5;
+    object-fit:cover;
+    display:block;
+  }
+  .design-card .design-info{
+    padding:20px 24px 24px;
+  }
+  .design-card h3{
+    font-family:var(--font-display);
+    font-size:16px;
+    font-weight:600;
+    margin-bottom:6px;
+    color:var(--text-light);
+  }
+  .design-card p{
+    color:var(--text-muted);
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  /* ---------- Tools ---------- */
+  .tools-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+  }
+  @media (max-width:1023px){ .tools-grid{ grid-template-columns:repeat(3,1fr); } }
+  @media (max-width:600px){ .tools-grid{ grid-template-columns:1fr 1fr; } }
+
+  .tool-pill{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    background:var(--surface);
+    border:1px solid rgba(136,108,218,0.2);
+    border-radius:16px;
+    padding:20px;
+    transition:background 220ms ease, border-color 220ms ease, transform 220ms ease;
+  }
+  .tool-pill:hover{
+    background:var(--surface-hover);
+    border-color:var(--purple-light);
+    transform:translateY(-2px);
+  }
+  .tool-pill .tool-name{
+    font-family:var(--font-display);
+    font-size:15px;
+    font-weight:600;
+    color:var(--text-light);
+  }
+  .tool-pill .tool-cat{
+    font-size:12px;
+    color:var(--text-muted);
+  }
+
+  /* ---------- Process ---------- */
+  .process-list{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:24px;
+  }
+  @media (max-width:1023px){ .process-list{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:600px){ .process-list{ grid-template-columns:1fr; } }
+
+  .process-step{
+    position:relative;
+    padding:32px 24px 24px;
+    border-radius:24px;
+    border:1px solid rgba(136,108,218,0.2);
+  }
+  .process-step .idx{
+    font-family:var(--font-display);
+    font-size:36px;
+    font-weight:600;
+    color:transparent;
+    -webkit-text-stroke:1px var(--purple);
+    margin-bottom:16px;
+    display:block;
+  }
+  .process-step h4{
+    font-family:var(--font-display);
+    font-size:16px;
+    font-weight:600;
+    margin-bottom:12px;
+    color:var(--text-light);
+  }
+  .process-step p{
+    color:var(--text-muted);
+    font-size:14px;
+    line-height:1.5;
+  }
+  .process-step:not(:last-child)::after{
+    content:"";
+    position:absolute;
+    top:44px;
+    right:-24px;
+    width:24px;
+    height:1px;
+    background:linear-gradient(90deg, var(--purple), transparent);
+  }
+  @media (max-width:1023px){ .process-step::after{ display:none; } }
+
+  /* ---------- Contact ---------- */
+  .contact-panel{
+    background:var(--surface);
+    border-radius:64px;
+    padding:64px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    border:1px solid rgba(136,108,218,0.2);
+  }
+  .contact-panel::before{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(ellipse 600px 300px at 50% 0%, rgba(136,108,218,0.25), transparent 70%);
+    pointer-events:none;
+  }
+  @media (max-width:767px){ .contact-panel{ padding:40px 24px; border-radius:32px; } }
+
+  .contact-panel h2{
+    font-family:var(--font-display);
+    font-size:36px;
+    font-weight:600;
+    margin-bottom:16px;
+    position:relative;
+  }
+  @media (max-width:767px){ .contact-panel h2{ font-size:26px; } }
+  .contact-panel p{
+    color:var(--text-muted);
+    max-width:48ch;
+    margin:0 auto 40px;
+    position:relative;
+  }
+  .contact-actions{
+    display:flex;
+    gap:24px;
+    justify-content:center;
+    flex-wrap:wrap;
+    position:relative;
+  }
+
+  .badge-row{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:40px;
+    position:relative;
+  }
+  .badge{
+    font-family:var(--font-body);
+    font-size:14px;
+    color:var(--text-muted);
+    background:rgba(172,172,185,0.1);
+    padding:6px 12px;
+    border-radius:16px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    position:relative; z-index:1;
+    padding:48px 0;
+    border-top:1px solid rgba(136,108,218,0.12);
+  }
+  .footer-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  .footer-row p{
+    font-size:14px;
+    color:var(--text-deep);
+  }
+  .footer-links{
+    display:flex;
+    gap:24px;
+    list-style:none;
+  }
+  .footer-links a{
+    font-size:14px;
+    color:var(--text-muted);
+    transition:color 220ms ease;
+  }
+  .footer-links a:hover{ color:var(--purple); }
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity 700ms ease, transform 700ms ease;
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- Custom cursor ---------- */
+  .cursor-dot, .cursor-ring{
+    position:fixed;
+    top:0; left:0;
+    border-radius:50%;
+    pointer-events:none;
+    z-index:9999;
+    transform:translate(-50%,-50%);
+  }
+  .cursor-dot{
+    width:6px; height:6px;
+    background:var(--purple-light);
+    box-shadow:0 0 8px var(--purple);
+  }
+  .cursor-ring{
+    width:36px; height:36px;
+    border:1.5px solid var(--purple);
+    background:rgba(136,108,218,0.06);
+    transition:width 200ms ease, height 200ms ease, background 200ms ease, border-color 200ms ease;
+  }
+  .cursor-ring.hover{
+    width:64px; height:64px;
+    background:rgba(136,108,218,0.15);
+    border-color:var(--purple-light);
+  }
+  body{ cursor:none; }
+  a, button, .btn-primary, .nav-cta, .card{ cursor:none; }
+
+  /* Hide custom cursor entirely on touch devices */
+  @media (hover:none), (pointer:coarse){
+    .cursor-dot, .cursor-ring{ display:none; }
+    body, a, button, .btn-primary, .nav-cta, .card{ cursor:auto; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<div class="glow-field"></div>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="logo">DJ<span>.</span>SACULLES</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Start a project</a>
+    <button class="nav-toggle" aria-label="Open menu">☰</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <div class="wrap">
+    <section class="hero" style="padding-top:64px;">
+      <div class="reveal">
+        <span class="eyebrow">Available for freelance work</span>
+        <h1 class="display">Your <em>virtual assistant</em> for content, data, and design.</h1>
+        <p class="lead">I'm DJ — a virtual assistant specializing in video editing, data entry, and graphic design, helping brands and busy founders get organized, on-brand, and ready to publish.</p>
+        <div class="hero-cta-row">
+          <a href="#work" class="btn-primary">View my work</a>
+          <a href="#contact" class="btn-text">Book a call →</a>
+        </div>
+      </div>
+      <div class="hero-media has-video reveal">
+        <iframe src="https://drive.google.com/file/d/1C7U508Y55ilclbfeN_pWmMvO4B66XVyB/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+        <span class="frame-label">Showreel</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="wrap">
+    <section id="about">
+      <div class="about-grid">
+        <div class="about-portrait reveal"></div>
+        <div class="about-body reveal">
+          <p class="lg">I help brands stay <span class="accent">organized, on-brand, and consistent</span> — across content, data, and design.</p>
+          <p>I'm DJ Neri Saculles, a virtual assistant based in Isabela, Philippines, supporting brands and founders with video editing, data entry, and graphic design. I graduated from Isabela State University with a degree in Fisheries and Aquatic Sciences — but found my real focus in visual storytelling and organized, detail-driven work, and now support clients as a freelance virtual assistant.</p>
+          <p>From cutting fast-paced Reels and Shorts to cleaning up spreadsheets and designing on-brand graphics, I bring the same organized, detail-oriented approach to every task. I'm a fast learner, quick to pick up new tools and workflows, and reliable when it comes to deadlines.</p>
+          <div class="stat-row">
+            <div class="stat"><div class="num" style="font-size:18px;">Video Editing</div><div class="label">Reels, Shorts &amp; TikToks</div></div>
+            <div class="stat"><div class="num" style="font-size:18px;">Data Entry</div><div class="label">Sheets &amp; CRM upkeep</div></div>
+            <div class="stat"><div class="num" style="font-size:18px;">Graphic Design</div><div class="label">On-brand visuals</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="wrap">
+    <section id="services">
+      <div class="section-head reveal">
+        <div>
+          <h2 class="heading">What I can take off your plate</h2>
+        </div>
+        <p class="section-desc">Three core services, one reliable virtual assistant.</p>
+      </div>
+      <div class="card-grid reveal">
+        <div class="card">
+          <h3>Data Entry</h3>
+          <p>Clean, accurate, and organized data — spreadsheet setup, CRM updates, form processing, and record-keeping so your information is always ready when you need it.</p>
+          <a href="#contact" class="card-link">Get help with data →</a>
+        </div>
+        <div class="card">
+          <h3>Video Editing</h3>
+          <p>Fast-paced, high-retention edits for Reels, TikToks, Shorts, and longer-form brand video — built to hold attention and stay on-brand.</p>
+          <a href="#work" class="card-link">See video work →</a>
+        </div>
+        <div class="card">
+          <h3>Graphic Design</h3>
+          <p>Clean, on-brand graphics for social posts, thumbnails, and video overlays — designed to be consistent with your brand across every platform.</p>
+          <a href="#contact" class="card-link">Start a design project →</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- WORK -->
+  <div class="wrap">
+    <section id="work">
+      <div class="section-head reveal">
+        <div>
+          <h2 class="heading">Selected work</h2>
+        </div>
+        <p class="section-desc">Hover a video to preview the project. Scroll down for design work.</p>
+      </div>
+      <div class="reels-grid reveal" id="reelsGrid">
+        <div class="reel-item" data-reel>
+          <div class="reel-video-wrap">
+            <span class="tag">Reels</span>
+            <iframe src="https://drive.google.com/file/d/1gh5Jq3DIrbtaZIEtCX8-isrxRtufalRY/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="reel-info">
+            <h3>Reels &amp; Short-Form</h3>
+            <p>Fast-paced, high-retention edits built for social — strong hooks and a cut that keeps the scroll from stopping.</p>
+            <a href="https://drive.google.com/file/d/1gh5Jq3DIrbtaZIEtCX8-isrxRtufalRY/view" target="_blank" rel="noopener" class="card-link">Watch full video →</a>
+          </div>
+        </div>
+        <div class="reel-item" data-reel>
+          <div class="reel-video-wrap">
+            <span class="tag">Business</span>
+            <iframe src="https://drive.google.com/file/d/1ZFDa116dTQ6xjhkDF3jQptCTx8kB6tNo/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="reel-info">
+            <h3>Business &amp; Brand Video</h3>
+            <p>Polished brand storytelling — clear structure, consistent identity, and pacing built to hold a professional audience.</p>
+            <a href="https://drive.google.com/file/d/1ZFDa116dTQ6xjhkDF3jQptCTx8kB6tNo/view" target="_blank" rel="noopener" class="card-link">Watch full video →</a>
+          </div>
+        </div>
+        <div class="reel-item" data-reel>
+          <div class="reel-video-wrap">
+            <span class="tag">Sample Edits</span>
+            <iframe src="https://drive.google.com/file/d/1MgYZRHJmQoVZNwiqjYoAGvr0CHDn_UQw/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="reel-info">
+            <h3>Sample Edits</h3>
+            <p>A mixed reel showing range across pacing and editing style — pulled from client work spanning different formats.</p>
+            <a href="https://drive.google.com/file/d/1MgYZRHJmQoVZNwiqjYoAGvr0CHDn_UQw/view" target="_blank" rel="noopener" class="card-link">Watch full video →</a>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:64px;">
+        <h3 style="font-family:var(--font-display); font-size:20px; font-weight:600; margin-bottom:24px; color:var(--text-light);">Graphic design samples</h3>
+        <div class="design-grid reveal">
+          <div class="design-card">
+            <img src="https://dijeyyy.github.io/portfolio/arctic-coffee-branding.png" alt="Arctic Coffee Shop brand identity board" class="design-thumb">
+            <div class="design-info">
+              <h3>Arctic Coffee Shop — Brand Identity</h3>
+              <p>Full brand board: logo, color palette, typography, cup and packaging mockups.</p>
+            </div>
+          </div>
+          <div class="design-card">
+            <img src="https://dijeyyy.github.io/portfolio/lune-branding.png" alt="Luné ice cream and coffee brand identity board" class="design-thumb">
+            <div class="design-info">
+              <h3>Luné — Ice Cream, Tea &amp; Coffee Branding</h3>
+              <p>Packaging, menu design, cup design, and social media mockups for a dessert cafe brand.</p>
+            </div>
+          </div>
+          <div class="design-card">
+            <img src="https://dijeyyy.github.io/portfolio/headphones-ad.png" alt="Headphones promotional poster design" class="design-thumb">
+            <div class="design-info">
+              <h3>Headphones — Promo Poster</h3>
+              <p>Product ad poster with bold typography and studio-style lighting for a social promo campaign.</p>
+            </div>
+          </div>
+          <div class="design-card">
+            <img src="https://dijeyyy.github.io/portfolio/aquastart-poster.png" alt="AQUASTART event poster for ISU Roxas Fisheries" class="design-thumb">
+            <div class="design-info">
+              <h3>AQUASTART — Event Poster</h3>
+              <p>Orientation event poster for ISU Roxas Fisheries students, built with event details and dress code info.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="wrap">
+    <section id="tools">
+      <div class="section-head reveal">
+        <div>
+          <h2 class="heading">Tools I work in</h2>
+        </div>
+        <p class="section-desc">Comfortable across data, editing, and design software.</p>
+      </div>
+      <div class="tools-grid reveal">
+        <div class="tool-pill"><span class="tool-name">Excel</span><span class="tool-cat">Data entry</span></div>
+        <div class="tool-pill"><span class="tool-name">Google Sheets</span><span class="tool-cat">Data entry</span></div>
+        <div class="tool-pill"><span class="tool-name">HubSpot</span><span class="tool-cat">CRM</span></div>
+        <div class="tool-pill"><span class="tool-name">Adobe Premiere</span><span class="tool-cat">Video editing</span></div>
+        <div class="tool-pill"><span class="tool-name">CapCut</span><span class="tool-cat">Video editing</span></div>
+        <div class="tool-pill"><span class="tool-name">Canva</span><span class="tool-cat">Graphic design</span></div>
+        <div class="tool-pill"><span class="tool-name">Illustrator</span><span class="tool-cat">Graphic design</span></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- PROCESS -->
+  <div class="wrap">
+    <section id="process">
+      <div class="section-head reveal">
+        <div>
+          <h2 class="heading">How I work</h2>
+        </div>
+        <p class="section-desc">A straightforward process from first brief to final delivery.</p>
+      </div>
+      <div class="process-list">
+        <div class="process-step reveal">
+          <span class="idx">01</span>
+          <h4>Discovery</h4>
+          <p>I start by understanding your brand, goals, and workflow — so every task, edit, or entry serves a clear purpose.</p>
+        </div>
+        <div class="process-step reveal">
+          <span class="idx">02</span>
+          <h4>Organize &amp; build</h4>
+          <p>Raw footage, messy spreadsheets, or a blank design brief becomes a clear, structured deliverable.</p>
+        </div>
+        <div class="process-step reveal">
+          <span class="idx">03</span>
+          <h4>Polish &amp; check</h4>
+          <p>Color grading and sound for video, accuracy checks for data, brand consistency for design — every detail gets a second look.</p>
+        </div>
+        <div class="process-step reveal">
+          <span class="idx">04</span>
+          <h4>Review &amp; deliver</h4>
+          <p>You review the work, I refine based on feedback, and you get a final deliverable ready to use — on time.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="wrap">
+    <section id="contact">
+      <div class="contact-panel reveal">
+        <h2>Have a project in mind?</h2>
+        <p>I'm currently taking on new clients for virtual assistant work — video editing, data entry, and graphic design. Tell me about your project and I'll get back to you within a day.</p>
+        <div class="contact-actions">
+          <a href="mailto:djsaculles21@gmail.com" class="btn-primary">Email me</a>
+          <a href="#" class="btn-text">Book a 15-min call →</a>
+        </div>
+        <div class="badge-row">
+          <span class="badge">Video Editing</span>
+          <span class="badge">Data Entry</span>
+          <span class="badge">Graphic Design</span>
+          <span class="badge">Fast Turnaround</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <p>© 2026 DJ Neri Saculles. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">LinkedIn</a></li>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">Behance</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ---------- Custom smooth cursor ----------
+  const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+  if(!isTouch){
+    const dot = document.querySelector('.cursor-dot');
+    const ring = document.querySelector('.cursor-ring');
+
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+    let ringX = mouseX, ringY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      // dot follows instantly (no lag)
+      dot.style.left = mouseX + 'px';
+      dot.style.top = mouseY + 'px';
+    });
+
+    // ring follows with smooth easing (lerp) for the trailing effect
+    function animateRing(){
+      ringX += (mouseX - ringX) * 0.15;
+      ringY += (mouseY - ringY) * 0.15;
+      ring.style.left = ringX + 'px';
+      ring.style.top = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    // grow the ring when hovering interactive elements ("targeting")
+    const targets = document.querySelectorAll('a, button, .card, .reel-item');
+    targets.forEach(el => {
+      el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+    });
+  }
+
+  // ---------- Selected Work: portrait reel hover interaction ----------
+  const reelsGrid = document.getElementById('reelsGrid');
+  if(reelsGrid){
+    const reelItems = reelsGrid.querySelectorAll('.reel-item');
+    const isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+    if(!isTouchDevice){
+      reelItems.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+          reelsGrid.classList.add('is-hovering');
+          reelItems.forEach(i => i.classList.remove('is-active'));
+          item.classList.add('is-active');
+        });
+        item.addEventListener('mouseleave', () => {
+          item.classList.remove('is-active');
+          // if no item is active anymore, stop the dim/zoom-out on siblings
+          const stillActive = reelsGrid.querySelector('.reel-item.is-active');
+          if(!stillActive){
+            reelsGrid.classList.remove('is-hovering');
+          }
+        });
+      });
+    }
+    // On touch devices we intentionally do nothing extra here —
+    // .reel-info is already visible by default via the (hover:none) media query.
+  }
+</script>
+
+</body>
+</html>
